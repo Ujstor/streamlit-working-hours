@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 import seaborn as sns
 
 # Load the CSV data
@@ -14,8 +13,8 @@ st.title(":bar_chart: Working Hours Dashboard")
 st.markdown("##")
 
 # ---- Sidebar for Filtering Years ----
-st.sidebar.header("Filter Years")
-selected_years = st.sidebar.multiselect("Select Years", df['date'].dt.year.unique(), default=df['date'].dt.year.unique())
+st.sidebar.header("Filter Years for Visual Calendar")
+selected_years = st.sidebar.multiselect("Select Years", df['date'].dt.year.unique(), default=None)
 
 # Filter data based on selected years
 filtered_df = df[df['date'].dt.year.isin(selected_years)]
@@ -30,7 +29,7 @@ df_result = sum_working_hours_per_month.reset_index()
 pivot_result = df_result.pivot_table(index='year', columns='month', values='total_time_hour', fill_value=0)
 
 # Create main heatmap using Streamlit's native plotting function
-st.subheader('Working Hours Heatmap (Year-wise)')
+st.subheader('Working Hours Heatmap')
 fig, ax = plt.subplots(figsize=(10, 3))
 sns.heatmap(pivot_result, annot=True, fmt=".1f", cmap='YlGnBu', linewidths=0.5, ax=ax)
 ax.set_title('Working Hours Heatmap (Year-wise)')
@@ -40,7 +39,7 @@ st.pyplot(fig)
 
 
 # Create main bar plot
-st.subheader('Total Working Hours per Month (Year-wise)')
+st.subheader('Total Working Hours per Month')
 fig_bar, ax_bar = plt.subplots(figsize=(10, 4))
 pivot_result.plot(kind='bar', stacked=True, ax=ax_bar)
 plt.title('Total Working Hours per Month (Year-wise)')
