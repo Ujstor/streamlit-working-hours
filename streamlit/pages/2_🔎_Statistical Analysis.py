@@ -14,12 +14,19 @@ st.set_page_config(page_title="Statistical Analysis", page_icon=":bar_chart:", l
 st.title(":bar_chart: Statistical Analysis ")
 st.markdown("##")
 
+# Sidebar for year selection
+st.sidebar.header("Filter by Year")
+years = st.sidebar.multiselect("Select years", df['date'].dt.year.unique(), default=df['date'].dt.year.unique())
+
+# Filter data based on selected years
+filtered_df = df[df['date'].dt.year.isin(years)]
+
 # Scatter Plot
 st.subheader('Scatter Plot of Working Hours')
 string = 'A scatter plot of working hours and dates is a graphical representation that shows the relationship between the amount of time spent working (in hours) and specific dates.'
 st.markdown(string, help=None)
 fig, ax = plt.subplots(figsize=(16, 6))
-ax.scatter(df['date'], df['total_time_hour'])
+ax.scatter(filtered_df['date'], filtered_df['total_time_hour'])
 locator = mdates.MonthLocator()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
@@ -31,7 +38,7 @@ st.subheader('Histogram of Working Hours')
 string = 'Histograms are commonly used to understand the distribution of a continuous variable, such as working hours, and to identify patterns, trends, and central tendencies in the data. They provide insights into how data is spread out and help identify clusters, gaps, and outliers.'
 st.markdown(string, help=None)
 fig, ax = plt.subplots(figsize=(15, 6), dpi=80)
-ax.hist(df['total_time_hour'], bins=60, color='skyblue', edgecolor='black')
+ax.hist(filtered_df['total_time_hour'], bins=60, color='skyblue', edgecolor='black')
 ax.set_ylabel('Days')
 ax.set_xlabel('Working Hours')
 ticks = np.arange(4, 13, 0.5)
@@ -44,22 +51,27 @@ st.pyplot(fig)
 st.subheader('Density Plot of Working Hours')
 string = 'Density plot visualize the distribution of a continuous variable data points. Unlike a histogram, which uses bars to approximate the frequency of data within specific intervals (bins), a density plot represents the probability density function of the data.'
 st.markdown(string, help=None)
-fig, ax = plt.subplots(figsize=(15, 6), dpi=80)
-ax = df['total_time_hour'].plot(kind='density', color='blue')
-ax.axvline(df['total_time_hour'].mean(), color='red', linestyle='dashed', label='Mean')
-ax.axvline(df['total_time_hour'].median(), color='green', linestyle='dashed', label='Median')
-ticks = np.arange(4, 14, 0.5)
-ax.set_xticks(ticks)
-detailed_ticks = [tick if tick % 1 == 0 else '' for tick in ticks]
-ax.set_xticklabels(detailed_ticks)
-ax.set_xlim(4, 13)
-ax.legend()
-st.pyplot(fig)
+
+# Check if the data is valid for plotting
+if not filtered_df['total_time_hour'].empty and not filtered_df['total_time_hour'].isnull().all():
+    fig, ax = plt.subplots(figsize=(15, 6), dpi=80)
+    ax = filtered_df['total_time_hour'].plot(kind='density', color='blue')
+    ax.axvline(filtered_df['total_time_hour'].mean(), color='red', linestyle='dashed', label='Mean')
+    ax.axvline(filtered_df['total_time_hour'].median(), color='green', linestyle='dashed', label='Median')
+    ticks = np.arange(4, 14, 0.5)
+    ax.set_xticks(ticks)
+    detailed_ticks = [tick if tick % 1 == 0 else '' for tick in ticks]
+    ax.set_xticklabels(detailed_ticks)
+    ax.set_xlim(4, 13)
+    ax.legend()
+    st.pyplot(fig)
+else:
+    st.warning("No valid data available for density plot.")
 
 # Average Total Time Trend Over Months
 st.subheader('Average Total Time Trend Over Months')
-df['month'] = df['date'].dt.month
-monthly_avg_total_time = df.groupby('month')['total_time_hour'].mean()
+filtered_df.loc[:, 'month'] = filtered_df['date'].dt.month
+monthly_avg_total_time = filtered_df.groupby('month')['total_time_hour'].mean()
 
 fig_line, ax_line = plt.subplots(figsize=(15, 6))
 ax_line.plot(monthly_avg_total_time.index, monthly_avg_total_time.values, marker='o', linestyle='-')
@@ -70,6 +82,7 @@ ax_line.set_xticks(range(1, 13))
 ax_line.set_xticklabels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
 ax_line.grid(True)
 st.pyplot(fig_line)
+
 
 # Boxplot of Total Time by Year
 st.subheader('Distribution of Total Time by Year')

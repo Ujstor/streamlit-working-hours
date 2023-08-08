@@ -15,3 +15,6 @@ textColor = "#FFF"
 # Default: "sans serif"
 font = "sans serif"
 
+[global]
+# Suppress SettingWithCopyWarning from Pandas
+pandas.options.mode.chained_assignment = "warn"
