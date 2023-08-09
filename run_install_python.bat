@@ -4,11 +4,7 @@ REM Check if Python is installed
 python --version >nul 2>&1
 if %errorlevel% NEQ 0 (
     echo Python is not installed. Installing Python...
-    winget install --exact --id Python.Python
-    if %errorlevel% NEQ 0 (
-        echo Failed to install Python. Exiting...
-        exit /b 1
-    )
+    winget install Python
 )
 
 REM Check if the virtual environment folder 'env' exists, and create it if not
@@ -18,7 +14,7 @@ if not exist env (
 )
 
 REM Activate the virtual environment
-call env\Scripts\activate
+call env\Scripts\activate.bat
 
 REM Install Python dependencies from requirements.txt
 echo Installing Python dependencies...

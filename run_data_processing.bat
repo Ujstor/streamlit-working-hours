@@ -5,7 +5,7 @@ if NOT "%VIRTUAL_ENV%"=="" (
     echo Virtual environment is already activated.
 ) else (
     echo Activating virtual environment...
-    call .\env\Scripts\activate
+    call .\env\Scripts\activate.bat
 )
 
 echo Combining data...
