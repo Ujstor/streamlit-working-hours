@@ -37,9 +37,14 @@ Quit app `ctrl-c`
 
 # Python Environment Setup and Dependency Installation
 
-`run_install_python.bat` script automates the setup process for a Python project by performing the following steps:
+run `install_python.bat` script automates the setup process for a Python project by performing the following steps:
 
 1. Checks if Python is installed. If not, it installs Python using the "winget" package manager.
 2. Checks if a virtual environment folder named 'env' exists. If not, it creates one.
 3. Activates the virtual environment.
 4. Installs Python dependencies listed in the `requirements.txt` file using the "pip" package manager.
+
+# Docker
+
+1. `docker build -t streamlit .`
+2. `docker run -p 8501:8501 streamlit`

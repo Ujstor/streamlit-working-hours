@@ -60,10 +60,10 @@ for year, year_data in grouped_df:
     calendar_df = pd.merge(calendar_df, year_data[['date', 'total_time_hour']], on='date', how='left')
     calendar_df['total_time_hour'].fillna(0, inplace=True)
     calendar_pivot = calendar_df.pivot_table(index=calendar_df['date'].dt.month,
-                                             columns=calendar_df['date'].dt.day,
-                                             values='total_time_hour',
-                                             fill_value=0)
-    
+                                            columns=calendar_df['date'].dt.day,
+                                            values='total_time_hour',
+                                            fill_value=0)
+
     # Create the Visual Calendar Heatmap using Streamlit's native plotting function
     st.subheader(f'Visual Calendar - Working Hours ({year})')
     fig_calendar, ax_calendar = plt.subplots(figsize=(15, 5))
