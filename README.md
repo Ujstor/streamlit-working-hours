@@ -3,6 +3,8 @@
 ## [Live App Link](https://working-hours.astipan.com/)
 
 This repository contains data sets and analysis scripts for working hours data spanning multiple years. The raw data is divided into three forms and stored in separate Excel files for each month. The analysis pipeline involves combining the data forms, performing data cleaning, and starning streamlit server for statistical analysis. The final analysis includes various visualizations, statistical measures, and insights into the working hours data.
+<br>
+
 
 ## Data
 
@@ -34,6 +36,8 @@ The cleaned and combined data sets from each form are merged into a single CSV f
   Network URL: http://192.168.8.104:8501
 
 Quit app `ctrl-c`
+<br>
+<br>
 
 # Python Environment Setup and Dependency Installation
 
@@ -43,8 +47,9 @@ run `install_python.bat` script automates the setup process for a Python project
 2. Checks if a virtual environment folder named 'env' exists. If not, it creates one.
 3. Activates the virtual environment.
 4. Installs Python dependencies listed in the `requirements.txt` file using the "pip" package manager.
+<br>
+<br>
 
 # Docker
 
-1. `docker build -t streamlit .`
-2. `docker run -p 8501:8501 streamlit`
+run `docker compose up`
