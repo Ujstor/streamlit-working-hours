@@ -14,3 +14,11 @@ textColor = "#FFF"
 # Font family for all text in the app, except code blocks. One of "sans serif", "serif", or "monospace".
 # Default: "sans serif"
 font = "sans serif"
+
+[server]
+port = 8501
+headless = true
+enableCORS = false
+enableXsrfProtection = false
+enableWebsocketCompression = false
+address = "0.0.0.0"
