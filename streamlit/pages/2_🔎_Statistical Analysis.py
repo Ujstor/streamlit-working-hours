@@ -6,7 +6,7 @@ import matplotlib.dates as mdates
 import seaborn as sns
 
 # Load the CSV data
-df = pd.read_csv('../data/final_data.csv', parse_dates=['date'])
+df = pd.read_csv('./data/final_data.csv', parse_dates=['date'])
 df.sort_values(by='date', inplace=True)
 
 # Streamlit app title and page configuration

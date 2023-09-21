@@ -1,12 +1,12 @@
 @echo off
 
-REM Check if the virtual environment is activated
-if NOT "%VIRTUAL_ENV%"=="" (
-    echo Virtual environment is already activated.
-) else (
-    echo Activating virtual environment...
-    call .\env\Scripts\activate.bat
-)
+@REM REM Check if the virtual environment is activated
+@REM if NOT "%VIRTUAL_ENV%"=="" (
+@REM     echo Virtual environment is already activated.
+@REM ) else (
+@REM     echo Activating virtual environment...
+@REM     call .\env\Scripts\activate.bat
+@REM )
 
 echo Combining data...
 python ./cleaning_scripts/combine_data.py
@@ -33,5 +33,5 @@ python ./cleaning_scripts/final_data.py
 
 echo Data processing completed.
 
-cd .\streamlit\
-streamlit run Home.py
+@REM cd .\streamlit\
+@REM streamlit run Home.py
