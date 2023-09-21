@@ -1,38 +1,73 @@
 import pandas as pd
 
-# Read the input CSV file
-df = pd.read_csv('./data/combined_dataform2.csv')
+def read_input_data(input_csv):
+    # Read the input CSV file
+    df = pd.read_csv(input_csv)
+    return df
 
-# Filter rows for a specific 'Personal' (id)
-df = df[(df['Personal'] == 'Stipan Aleksandar')]
+def filter_by_id(df, target_id):
+    # Filter rows for a specific 'id'
+    return df[df['Personal'] == target_id]
 
-# Drop rows with 'Tag' values 'Beginn Arbeit' or 'Beginn Pause'
-df = df.drop(df[(df['Tag'] == 'Beginn Arbeit') | (df['Tag'] == 'Beginn Pause')].index)
+def drop_invalid_rows(df):
+    # Drop rows with 'Tag' values 'Beginn Arbeit' or 'Beginn Pause'
+    return df[~((df['Tag'] == 'Beginn Arbeit') | (df['Tag'] == 'Beginn Pause'))]
 
-# Rename columns
-df.rename(columns={'Personal': 'id', 'Tag': 'date', 'T.Summe': 'drive_time_min', 'T.Pause': 'pause_had_min', 'gesetzl. Pause': 'pause_should_min'}, inplace=True)
+def rename_columns(df):
+    # Rename columns
+    df.rename(columns={'Personal': 'id', 'Tag': 'date', 'T.Summe': 'drive_time_min',
+                       'T.Pause': 'pause_had_min', 'gesetzl. Pause': 'pause_should_min'}, inplace=True)
+    return df
 
-# Drop unnecessary columns
-clean_columns = df.drop(['T.Summe (-Pause)', 'Verdienst', 'Soll', '+- Diff.'], axis=1)
+def drop_unnecessary_columns(df, columns_to_drop):
+    # Drop unnecessary columns
+    return df.drop(columns=columns_to_drop, axis=1)
 
-# Convert columns to integers
-clean_columns['drive_time_min'] = clean_columns['drive_time_min'].astype(int)
-clean_columns['pause_had_min'] = clean_columns['pause_had_min'].astype(int)
-clean_columns['pause_should_min'] = clean_columns['pause_should_min'].astype(int)
+def convert_columns_to_int(df):
+    # Convert columns to integers
+    df['drive_time_min'] = df['drive_time_min'].astype(int)
+    df['pause_had_min'] = df['pause_had_min'].astype(int)
+    df['pause_should_min'] = df['pause_should_min'].astype(int)
+    return df
 
-# Convert 'date' column to datetime format
-clean_columns['date'] = clean_columns['date'].str.strip()
-clean_columns['date'] = pd.to_datetime(clean_columns['date'], format='%d.%m.%Y', errors='coerce')
+def convert_date_to_datetime(df, date_column, date_format):
+    # Convert 'date' column to datetime format
+    df[date_column] = df[date_column].str.strip()
+    df[date_column] = pd.to_datetime(df[date_column], format=date_format, errors='coerce')
+    return df
 
-# Update DataFrame with cleaned columns
-cleaned_data = clean_columns
+def calculate_total_time(df):
+    # Calculate 'total_time_hour' column
+    df['drive_time_min'] = df['drive_time_min'] - df['pause_should_min']
+    df['total_time_hour'] = df['drive_time_min'] / 60
+    return df
 
-# Calculate 'total_time_hour' column
-cleaned_data['drive_time_min'] = cleaned_data['drive_time_min'] - cleaned_data['pause_should_min']
-cleaned_data['total_time_hour'] = (cleaned_data['drive_time_min'] / 60)
+def sort_by_date(df):
+    # Sort DataFrame by 'date' column
+    return df.sort_values(by='date')
 
-# Sort DataFrame by 'date' column
-cleaned_data.sort_values(by='date', inplace=True)
+def save_cleaned_data(df, output_csv):
+    # Save cleaned data to CSV file
+    df.to_csv(output_csv, index=False)
 
-# Save cleaned data to CSV file
-cleaned_data.to_csv('./data/cleaned_data2.csv', index=False)
+def main(input_csv, output_csv, target_id='Stipan Aleksandar'):
+    df = read_input_data(input_csv)
+    columns_to_drop = ['T.Summe (-Pause)', 'Verdienst', 'Soll', '+- Diff.']
+    date_format = '%d.%m.%Y'
+
+    df = filter_by_id(df, target_id)
+    df = drop_invalid_rows(df)
+    df = rename_columns(df)
+    df = drop_unnecessary_columns(df, columns_to_drop)
+    df = convert_columns_to_int(df)
+    df = convert_date_to_datetime(df, 'date', date_format)
+    df = calculate_total_time(df)
+    df = sort_by_date(df)
+    save_cleaned_data(df, output_csv)
+
+if __name__ == "__main__":
+    input_csv = './data/combined_dataform2.csv'
+    output_csv = './data/cleaned_data2.csv'
+    target_id = 'Stipan Aleksandar'
+
+    main(input_csv, output_csv, target_id)

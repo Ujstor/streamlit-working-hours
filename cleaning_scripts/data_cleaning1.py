@@ -1,47 +1,93 @@
+import os
 import pandas as pd
 
-# Read the input CSV file
-df = pd.read_csv('./data/combined_dataform1.csv')
 
-# Rename columns
-df.rename(columns={'Unnamed: 0': 'id', 'Unnamed: 1': 'date', 'Unnamed: 2': 'drive_time_min', 'Unnamed: 3': 'pause_had_min', 'Unnamed: 4': 'pause_should_min'}, inplace=True)
+def read_input_data(input_csv):
+    # Read the input CSV file
+    df = pd.read_csv(input_csv)
+    return df
 
-# Filter rows for a specific 'id'
-clean = df.loc[df['id'] == 'Stipan Aleksandar']
+def rename_columns(df):
+    # Rename columns
+    df.rename(columns={'Unnamed: 0': 'id', 'Unnamed: 1': 'date', 'Unnamed: 2': 'drive_time_min',
+                       'Unnamed: 3': 'pause_had_min', 'Unnamed: 4': 'pause_should_min'}, inplace=True)
+    return df
 
-# Drop unnecessary columns
-clean_columns = clean.drop(['Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7', 'Unnamed: 8', 'Unnamed: 9', 'Unnamed: 10', 'Unnamed: 11', 'Unnamed: 12', 'Unnamed: 13', 'Unnamed: 14', 'Unnamed: 15', 'Unnamed: 16', 'Unnamed: 17'], axis=1)
+def filter_by_id(df, target_id):
+    # Filter rows for a specific 'id'
+    return df[df['id'] == target_id]
 
-# Update DataFrame with cleaned columns
-df = clean_columns
+def drop_unnecessary_columns(df):
+    # List of columns to drop
+    unnecessary_columns = [f'Unnamed: {i}' for i in range(5, 18)]
+    
+    # Filter out columns that actually exist in the DataFrame
+    existing_columns = [col for col in unnecessary_columns if col in df.columns]
+    
+    # Drop existing unnecessary columns
+    df = df.drop(columns=existing_columns, axis=1)
+    
+    return df
 
-# Convert 'drive_time_min' column to integer
-df['drive_time_min'] = df['drive_time_min'].astype(int)
+def convert_drive_time_to_int(df):
+    # Convert 'drive_time_min' column to integer
+    df['drive_time_min'] = df['drive_time_min'].astype(int)
+    return df
 
-# Filter out rows with invalid 'pause_had_min' values and 'drive_time_min' greater than 1000
-df = df.drop(df[(df['pause_had_min'] == 'Hinfahrt') | (df['drive_time_min'] > 1000)].index)
+def filter_invalid_rows(df):
+    # Filter out rows with invalid 'pause_had_min' values and 'drive_time_min' greater than 1000
+    return df[~((df['pause_had_min'] == 'Hinfahrt') | (df['drive_time_min'] > 1000))]
 
-# Fill missing values with 0
-df = df.fillna(0)
+def fill_missing_values(df):
+    # Fill missing values with 0
+    return df.fillna(0)
 
-# Convert columns to integers
-df['pause_should_min'] = df['pause_should_min'].astype(int)
-df['pause_had_min'] = df['pause_had_min'].astype(int)
+def convert_columns_to_int(df):
+    # Convert 'pause_should_min' and 'pause_had_min' columns to integers
+    df['pause_should_min'] = df['pause_should_min'].astype(int)
+    df['pause_had_min'] = df['pause_had_min'].astype(int)
+    return df
 
-# Convert 'date' column to datetime format
-df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
-df['date'] = pd.to_datetime(df['date'])
+def convert_date_to_datetime(df):
+    # Convert 'date' column to datetime format
+    df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
+    df['date'] = pd.to_datetime(df['date'])
+    return df
 
-# Drop rows with 'drive_time_min' less than 180
-df = df.drop(df[df['drive_time_min'] < 180].index)
+def drop_low_drive_time_rows(df, threshold=180):
+    # Drop rows with 'drive_time_min' less than a threshold
+    return df[df['drive_time_min'] >= threshold]
 
-# Calculate 'total_time_hour' column
-df['drive_time_min'] = df['drive_time_min'] - df['pause_should_min']
-df['total_time_hour'] = (df['drive_time_min'] / 60)
+def calculate_total_time(df):
+    # Calculate 'total_time_hour' column
+    df['drive_time_min'] = df['drive_time_min'] - df['pause_should_min']
+    df['total_time_hour'] = (df['drive_time_min'] / 60)
+    return df
 
-# Sort DataFrame by 'date' column
-df = df.sort_values('date')
+def sort_by_date(df):
+    # Sort DataFrame by 'date' column
+    return df.sort_values('date')
 
-# Save cleaned data to CSV file
-df.to_csv('./data/cleaned_data1.csv', index=False)
+def save_cleaned_data(df, output_csv):
+    # Save cleaned data to CSV file
+    df.to_csv(output_csv, index=False)
 
+def main(input_csv, output_csv, target_id='Stipan Aleksandar'):
+    df = read_input_data(input_csv)
+    df = rename_columns(df)
+    df = filter_by_id(df, target_id)
+    df = drop_unnecessary_columns(df)
+    df = convert_drive_time_to_int(df)
+    df = filter_invalid_rows(df)
+    df = fill_missing_values(df)
+    df = convert_columns_to_int(df)
+    df = convert_date_to_datetime(df)
+    df = drop_low_drive_time_rows(df)
+    df = calculate_total_time(df)
+    df = sort_by_date(df)
+    save_cleaned_data(df, output_csv)
+
+if __name__ == "__main__":
+    input_csv = './data/combined_dataform1.csv'
+    output_csv = './data/cleaned_data1.csv'
+    main(input_csv, output_csv)
