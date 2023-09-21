@@ -1,53 +1,43 @@
 import pandas as pd
 
 def read_input_data(input_csv):
-    # Read the input CSV file
     df = pd.read_csv(input_csv)
     return df
 
 def filter_by_id(df, target_id):
-    # Filter rows for a specific 'id'
     return df[df['Personal'] == target_id]
 
 def drop_invalid_rows(df):
-    # Drop rows with 'Tag' values 'Beginn Arbeit' or 'Beginn Pause'
     return df[~((df['Tag'] == 'Beginn Arbeit') | (df['Tag'] == 'Beginn Pause'))]
 
 def rename_columns(df):
-    # Rename columns
     df.rename(columns={'Personal': 'id', 'Tag': 'date', 'T.Summe': 'drive_time_min',
                        'T.Pause': 'pause_had_min', 'gesetzl. Pause': 'pause_should_min'}, inplace=True)
     return df
 
 def drop_unnecessary_columns(df, columns_to_drop):
-    # Drop unnecessary columns
     return df.drop(columns=columns_to_drop, axis=1)
 
 def convert_columns_to_int(df):
-    # Convert columns to integers
     df['drive_time_min'] = df['drive_time_min'].astype(int)
     df['pause_had_min'] = df['pause_had_min'].astype(int)
     df['pause_should_min'] = df['pause_should_min'].astype(int)
     return df
 
 def convert_date_to_datetime(df, date_column, date_format):
-    # Convert 'date' column to datetime format
     df[date_column] = df[date_column].str.strip()
     df[date_column] = pd.to_datetime(df[date_column], format=date_format, errors='coerce')
     return df
 
 def calculate_total_time(df):
-    # Calculate 'total_time_hour' column
     df['drive_time_min'] = df['drive_time_min'] - df['pause_should_min']
     df['total_time_hour'] = df['drive_time_min'] / 60
     return df
 
 def sort_by_date(df):
-    # Sort DataFrame by 'date' column
     return df.sort_values(by='date')
 
 def save_cleaned_data(df, output_csv):
-    # Save cleaned data to CSV file
     df.to_csv(output_csv, index=False)
 
 def main(input_csv, output_csv, target_id='Stipan Aleksandar'):

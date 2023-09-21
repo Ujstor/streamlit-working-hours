@@ -3,73 +3,55 @@ import pandas as pd
 
 
 def read_input_data(input_csv):
-    # Read the input CSV file
     df = pd.read_csv(input_csv)
     return df
 
 def rename_columns(df):
-    # Rename columns
     df.rename(columns={'Unnamed: 0': 'id', 'Unnamed: 1': 'date', 'Unnamed: 2': 'drive_time_min',
                        'Unnamed: 3': 'pause_had_min', 'Unnamed: 4': 'pause_should_min'}, inplace=True)
     return df
 
 def filter_by_id(df, target_id):
-    # Filter rows for a specific 'id'
     return df[df['id'] == target_id]
 
 def drop_unnecessary_columns(df):
-    # List of columns to drop
     unnecessary_columns = [f'Unnamed: {i}' for i in range(5, 18)]
-    
-    # Filter out columns that actually exist in the DataFrame
     existing_columns = [col for col in unnecessary_columns if col in df.columns]
-    
-    # Drop existing unnecessary columns
     df = df.drop(columns=existing_columns, axis=1)
-    
     return df
 
 def convert_drive_time_to_int(df):
-    # Convert 'drive_time_min' column to integer
     df['drive_time_min'] = df['drive_time_min'].astype(int)
     return df
 
 def filter_invalid_rows(df):
-    # Filter out rows with invalid 'pause_had_min' values and 'drive_time_min' greater than 1000
     return df[~((df['pause_had_min'] == 'Hinfahrt') | (df['drive_time_min'] > 1000))]
 
 def fill_missing_values(df):
-    # Fill missing values with 0
     return df.fillna(0)
 
 def convert_columns_to_int(df):
-    # Convert 'pause_should_min' and 'pause_had_min' columns to integers
     df['pause_should_min'] = df['pause_should_min'].astype(int)
     df['pause_had_min'] = df['pause_had_min'].astype(int)
     return df
 
 def convert_date_to_datetime(df):
-    # Convert 'date' column to datetime format
     df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d %H:%M:%S').dt.strftime('%Y-%m-%d')
     df['date'] = pd.to_datetime(df['date'])
     return df
 
 def drop_low_drive_time_rows(df, threshold=180):
-    # Drop rows with 'drive_time_min' less than a threshold
     return df[df['drive_time_min'] >= threshold]
 
 def calculate_total_time(df):
-    # Calculate 'total_time_hour' column
     df['drive_time_min'] = df['drive_time_min'] - df['pause_should_min']
     df['total_time_hour'] = (df['drive_time_min'] / 60)
     return df
 
 def sort_by_date(df):
-    # Sort DataFrame by 'date' column
     return df.sort_values('date')
 
 def save_cleaned_data(df, output_csv):
-    # Save cleaned data to CSV file
     df.to_csv(output_csv, index=False)
 
 def main(input_csv, output_csv, target_id='Stipan Aleksandar'):
