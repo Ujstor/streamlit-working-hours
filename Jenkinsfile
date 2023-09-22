@@ -18,5 +18,25 @@ pipeline {
       }
     }
 
+    stage('Test') {
+      steps {
+        sh '${JENKINS_HOME}/scripts/pytest.sh ${WORKSPACE}'
+      }
+    }
+
+    stage('Build') {
+      steps {
+        sh 'docker build -t ujstor/working_hours .'
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        sh '''
+
+  docker push ujstor/working_hours'''
+      }
+    }
+
   }
 }
