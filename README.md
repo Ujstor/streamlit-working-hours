@@ -52,4 +52,20 @@ run `install_python.bat` script automates the setup process for a Python project
 
 # Docker
 
-run `docker compose up`
+To build the Docker image from the code, run:
+
+```
+docker compose -f .\docker-compose-dev.yml up
+```
+
+If you want to pull the image from the Docker repository instead, use:
+
+```
+docker compose -f .\docker-compose-prod.yml up
+```
+
+Iimage is automatically built and deployed through the Jenkins pipeline, so you may not need to manually run these commands in most cases.
+
+<br/>
+
+![](https://i.imgur.com/AbHS5Qk.png)
