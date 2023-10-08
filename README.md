@@ -1,8 +1,10 @@
 # Working Hours Data Set Analysis
 
-## [Live App Link](https://working-hours.astipan.com/)
-
 This repository contains data sets and analysis scripts for working hours data spanning multiple years. The raw data is divided into three forms and stored in separate Excel files for each month. The analysis pipeline involves combining the data forms, performing data cleaning, and starning streamlit server for statistical analysis. The final analysis includes various visualizations, statistical measures, and insights into the working hours data.
+
+![](https://i.imgur.com/dGrBO6Q.png)
+
+![](https://i.imgur.com/kFDfezx.png)
 <br>
 
 
@@ -33,7 +35,6 @@ The cleaned and combined data sets from each form are merged into a single CSV f
  You can now view your Streamlit app in your browser.
 
   Local URL: http://localhost:8501
-  Network URL: http://192.168.8.104:8501
 
 Quit app `ctrl-c`
 <br>
@@ -64,8 +65,8 @@ If you want to pull the image from the Docker repository instead, use:
 docker compose -f .\docker-compose-prod.yml up
 ```
 
-Iimage is automatically built and deployed through the Jenkins pipeline, so you may not need to manually run these commands in most cases.
+Image is automatically built and deployed through the Jenkins pipeline after tests have passed and are merged into the master branch.
 
 <br/>
 
-![](https://i.imgur.com/AbHS5Qk.png)
+![](https://i.imgur.com/e8v57Xx.png)
