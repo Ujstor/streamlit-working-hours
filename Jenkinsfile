@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_HUB_USERNAME = 'ujstor'
-        DOCKER_REPO_NAME = 'test'
+        DOCKER_REPO_NAME = 'working_hours'
         VERSION_PART = 'Patch' // Patch, Minor, Major
         TAG = ''
     } 
