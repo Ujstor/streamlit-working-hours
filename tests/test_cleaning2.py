@@ -97,7 +97,7 @@ def test_main(sample_dataframe):
     assert '+- Diff.' in sample_dataframe.columns
 
     # Call the main function
-    main(input_csv, output_csv)
+    main(input_csv, output_csv, target_id = 'Stipan Aleksandar')
 
     # Check if the output CSV file exists
     assert os.path.exists(output_csv)
