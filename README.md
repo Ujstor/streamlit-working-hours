@@ -69,4 +69,25 @@ Image is automatically built and deployed through the Jenkins pipeline after tes
 
 <br/>
 
-![](https://i.imgur.com/e8v57Xx.png)
+![](https://i.imgur.com/s9vVzFo.png)
+
+# Jenkins Pipeline
+Pipeline is designed to automate the build, test and deployment process for a project. It includes several stages that are executed when the pipeline is triggered. The pipeline assumes the main development branch is named "master" and tailors its actions accordingly.
+
+### Pipeline Stages
+
+1. **Checkout Code**: This stage fetches the project's source code from a specified Git repository and branch (assumes "master" branch by default).
+
+2. **Test**: Runs tests on the code to ensure its correctness.
+
+3. **Generate Docker Image Tag**: Generates a Docker image tag if the pipeline is running on the "master" branch. The image tag format is determined by the version part specified (Patch, Minor, Major).
+
+4. **Build**: Builds a Docker image using the generated tag. This stage also requires the "master" branch to execute.
+
+5. **Deploy**: Pushes the Docker image to a Docker Hub repository. It is executed only on the "master" branch.
+
+6. **Environment Cleanup**: Cleans up the Docker image. Like the previous stages, it runs exclusively on the "master" branch.
+
+### Skipping Stages
+
+If the branch is not "master," the stages related to Docker image generation, build, deployment, and cleanup will be skipped, ensuring the pipeline continues without failure.

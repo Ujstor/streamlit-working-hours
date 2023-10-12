@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
     environment:
-      name: testing
+      name: Test
     runs-on: ubuntu-latest
     steps:
     - name: pulling git repo

@@ -40,7 +40,7 @@ def sort_by_date(df):
 def save_cleaned_data(df, output_csv):
     df.to_csv(output_csv, index=False)
 
-def main(input_csv, output_csv, target_id='Stipan Aleksandar'):
+def main(input_csv, output_csv, target_id):
     df = read_input_data(input_csv)
     columns_to_drop = ['T.Summe (-Pause)', 'Verdienst', 'Soll', '+- Diff.']
     date_format = '%d.%m.%Y'
