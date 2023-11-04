@@ -87,3 +87,8 @@ hide_st_style = """
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
+
+analytics_script = """
+<script defer data-domain="working-hours.astipan.com" src="https://analytics.ujstor.com/js/script.js"></script>
+"""
+st.components.v1.html(analytics_script)

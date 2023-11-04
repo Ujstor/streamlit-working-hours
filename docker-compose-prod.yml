@@ -1,7 +1,7 @@
-version: '3'
+version: "3"
 
 services:
   streamlit:
-    image: ujstor/working_hours:1.0.0
+    image: ujstor/working_hours:1.0.1
     ports:
-      - '8501:8501'
+      - "8501:8501"
